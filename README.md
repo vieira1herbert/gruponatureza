@@ -90,8 +90,8 @@ franquias/
 ### Clonar o repositório
 
 ```bash
-git clone https://github.com/seuusuario/sistema-franquias.git
-cd sistema-franquias
+git clone https://github.com/vieira1herbert/gruponatureza
+cd gruponatureza
 ```
 
 ### Criar ambiente virtual
