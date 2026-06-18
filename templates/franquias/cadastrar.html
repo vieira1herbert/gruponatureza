@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h2>Nova Franquia</h2>
+        <p>Cadastro de nova franquia.</p>
+    </div>
+</div>
+
+<div class="form-card">
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <div class="produto-acoes">
+            <button type="submit" class="btn-salvar-produto">
+                Salvar Franquia
+            </button>
+
+            <a href="{% url 'listar_franquias' %}" class="btn-cancelar-produto">
+                Cancelar
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

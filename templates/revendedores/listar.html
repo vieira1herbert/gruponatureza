@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h2>Revendedores</h2>
+        <p>Cadastro e consulta de revendedores.</p>
+    </div>
+
+    <a href="{% url 'cadastrar_revendedor' %}" class="btn-page">
+        Novo Revendedor
+    </a>
+
+</div>
+
+<div class="table-card">
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Código</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>Franquia</th>
+                <th>Ações</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for revendedor in revendedores %}
+
+            <tr>
+
+                <td>{{ revendedor.nome }}</td>
+
+                <td>{{ revendedor.cpf }}</td>
+
+                <td>{{ revendedor.codigo }}</td>
+
+                <td>{{ revendedor.telefone }}</td>
+
+                <td>{{ revendedor.email }}</td>
+
+                <td>{{ revendedor.franquia.nome }}</td>
+
+                <td>
+
+                    <a href="{% url 'editar_revendedor' revendedor.id %}" class="btn-page">
+                        Editar
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="7">
+                    Nenhum revendedor cadastrado.
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h2>Venda #{{ venda.id }}</h2>
+        <p>Detalhes da venda realizada.</p>
+    </div>
+
+    <a href="{% url 'listar_vendas' %}" class="btn-cancelar">
+        Voltar
+    </a>
+
+</div>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Franquia</h3>
+        <p style="font-size:20px;">{{ venda.franquia.nome }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Usuário</h3>
+        <p style="font-size:20px;">{{ venda.usuario.first_name|default:venda.usuario.username }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Data</h3>
+        <p style="font-size:20px;">{{ venda.data|date:"d/m/Y H:i" }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total</h3>
+        <p style="font-size:20px;">R$ {{ venda.valor_total }}</p>
+    </div>
+
+</div>
+
+<div class="table-card" style="margin-top:20px;">
+
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Código</th>
+                <th>Preço Unitário</th>
+                <th>Quantidade</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for item in itens %}
+
+            <tr>
+                <td>{{ item.produto.nome }}</td>
+                <td>{{ item.produto.codigo_barras }}</td>
+                <td>R$ {{ item.preco_unitario }}</td>
+                <td>{{ item.quantidade }}</td>
+                <td>R$ {{ item.subtotal }}</td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

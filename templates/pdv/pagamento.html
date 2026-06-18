@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h2>Forma de Pagamento</h2>
+        <p>Selecione a forma de pagamento para confirmar a venda.</p>
+    </div>
+</div>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Revendedor</h3>
+        <p style="font-size:20px;">{{ revendedor.nome }}</p>
+    </div>
+
+    <div class="card">
+        <h3>CPF</h3>
+        <p style="font-size:20px;">{{ revendedor.cpf }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Código</h3>
+        <p style="font-size:20px;">{{ revendedor.codigo }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total</h3>
+        <p style="font-size:20px;">R$ {{ total }}</p>
+    </div>
+
+</div>
+
+<div class="table-card" style="margin-top:20px;">
+
+    <h3>Produtos da Venda</h3>
+
+    <table class="table" style="margin-top:15px;">
+
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in itens %}
+            <tr>
+                <td>{{ item.produto.nome }}</td>
+                <td>{{ item.quantidade }}</td>
+                <td>R$ {{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
+
+<div class="form-card" style="margin-top:20px;">
+
+    <form method="POST" action="{% url 'confirmar_venda' %}">
+
+        {% csrf_token %}
+
+        <label for="forma_pagamento">Forma de Pagamento</label>
+
+        <select name="forma_pagamento" id="forma_pagamento" required>
+            <option value="">Selecione...</option>
+
+            {% for valor, nome in formas_pagamento %}
+            <option value="{{ valor }}">{{ nome }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <div class="payment-actions">
+            <button type="submit" class="btn-finalizar">
+                Confirmar Venda
+            </button>
+
+            <a href="{% url 'pdv' %}" class="btn-cancelar">
+                Cancelar
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h2>Consulta de Vendas</h2>
+        <p>Histórico completo de vendas realizadas.</p>
+    </div>
+
+</div>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Total Vendido</h3>
+        <p>R$ {{ total_vendido|floatformat:2 }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Quantidade de Vendas</h3>
+        <p>{{ quantidade_vendas }}</p>
+    </div>
+
+</div>
+
+<div class="filter-card" style="margin-top:20px;">
+
+    <form method="GET" class="filter-form">
+
+        <div>
+            <label>Número Pedido</label>
+
+            <input type="text" name="codigo" value="{{ codigo }}">
+        </div>
+
+        <div>
+            <label>Código Revendedor(a)</label>
+
+            <input type="text" name="revendedor" value="{{ revendedor }}">
+        </div>
+
+        <div>
+            <label>Forma Pagamento</label>
+
+            <select name="pagamento">
+
+                <option value="">
+                    Todos
+                </option>
+
+                {% for codigo_pagamento, nome_pagamento in formas_pagamento %}
+
+                <option value="{{ codigo_pagamento }}" {% if pagamento == codigo_pagamento %} selected {% endif %}>
+                    {{ nome_pagamento }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div>
+            <label>Data Inicial</label>
+
+            <input type="date" name="data_inicio" value="{{ data_inicio }}">
+        </div>
+
+        <div>
+            <label>Data Final</label>
+
+            <input type="date" name="data_fim" value="{{ data_fim }}">
+        </div>
+
+        <div class="filter-actions">
+
+            <button type="submit" class="btn-page">
+                Filtrar
+            </button>
+
+            <a href="/vendas/" class="btn-page btn-limpar-produto">
+                Limpar
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div class="table-card" style="margin-top:20px;">
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>Pedido</th>
+
+                <th>Revendedor</th>
+
+                <th>Pagamento</th>
+
+                <th>Total</th>
+
+                <th>Data</th>
+
+                <th>Extrato</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for venda in vendas %}
+
+            <tr>
+
+                <td>
+                    {{ venda.codigo_pedido }}
+                </td>
+
+                <td>
+                    {{ venda.revendedor.nome }}
+                </td>
+
+                <td>
+                    {{ venda.get_forma_pagamento_display }}
+                </td>
+
+                <td>
+                    R$ {{ venda.valor_total }}
+                </td>
+
+                <td>
+                    {{ venda.data|date:"d/m/Y H:i" }}
+                </td>
+
+                <td>
+
+                    <a href="{% url 'extrato_venda' venda.id %}" class="btn-page">
+                        Extrato
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="6">
+                    Nenhuma venda encontrada.
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

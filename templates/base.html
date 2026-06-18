@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Grupo Natureza</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <aside class="sidebar">
+
+            <div>
+
+                <h2>Grupo Natureza</h2>
+
+                <div class="usuario-logado">
+
+                    <span>
+                        Olá {{ request.user.first_name|default:request.user.username }}, seja bem-vindo(a)!
+                    </span>
+
+                    {% if request.user.tipo == 'gerente' or request.user.tipo == 'colaborador' %}
+
+                    <span class="franquia-logada">
+                        Franquia vinculada: {{ request.user.franquia.nome }}
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+                <nav>
+
+                    {% if request.user.tipo == 'administrador' %}
+
+                    <a href="/">Dashboard</a>
+
+                    <a href="{% url 'identificar_revendedor' %}">Realizar Vendas</a>
+
+                    <a href="/vendas/">Relatório de Vendas</a>
+
+                    <a href="/produtos/">Cadastro Produtos</a>
+
+                    <a href="/estoque/">Consultar Estoque</a>
+
+                    <a href="/franquias/">Gestão de Franquias</a>
+
+                    <a href="/usuarios/">Gestão de Colaboradores</a>
+
+                    <a href="/revendedores/">Gestão de Revendedores</a>
+
+                    <a href="/admin/">Admin Django</a>
+
+                    {% endif %}
+
+
+                    {% if request.user.tipo == 'operador' %}
+
+                    <a href="/">Dashboard</a>
+
+                    <a href="{% url 'identificar_revendedor' %}">Realizar Vendas</a>
+
+                    <a href="/estoque/">Consultar Estoque</a>
+
+                    <a href="/vendas/">Relatório de Vendas</a>
+
+                    <a href="/usuarios/">Gestão de Colaboradores</a>
+
+                    <a href="/revendedores/">Gestão de Revendedores</a>
+
+                    {% endif %}
+
+                    {% if request.user.tipo == 'gerente' %}
+
+                    <a href="/">Dashboard</a>
+
+                    <a href="{% url 'identificar_revendedor' %}">Realizar Vendas</a>
+
+                    <a href="/estoque/">Consultar Estoque</a>
+
+                    <a href="/vendas/">Relatório de Vendas</a>
+
+                    <a href="/usuarios/">Gestão de Colaboradores</a>
+
+                    <a href="/revendedores/">Gestão de Revendedores</a>
+
+                    {% endif %}
+
+
+                    {% if request.user.tipo == 'colaborador' %}
+
+                    <a href="/">Dashboard</a>
+
+                    <a href="{% url 'identificar_revendedor' %}">Realizar Vendas</a>
+
+                    <a href="/estoque/">Consultar Estoque</a>
+
+                    <a href="/vendas/">Relatório de Vendas</a>
+
+                    {% endif %}
+
+                </nav>
+
+            </div>
+
+            <div class="logout-area">
+                <a href="/logout/" class="logout-btn">
+                    Sair
+                </a>
+            </div>
+
+        </aside>
+
+        <div class="content">
+
+            <header class="topbar">
+                <h1>Sistema PDV</h1>
+            </header>
+
+            <main>
+                {% if messages %}
+
+                <div class="messages-container">
+
+                    {% for message in messages %}
+
+                    <div class="alert {{ message.tags }}">
+                        {{ message }}
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                {% endif %}
+                {% block content %}
+                {% endblock %}
+            </main>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

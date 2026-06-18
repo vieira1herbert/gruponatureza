@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h2>Produtos</h2>
+        <p>Gerenciamento de produtos do sistema.</p>
+    </div>
+
+    <a href="/produtos/cadastrar/" class="btn-page">
+        Novo Produto
+    </a>
+
+</div>
+
+<div class="filter-card">
+
+    <form method="GET" class="filter-form">
+
+        <div>
+            <label>Nome do Produto</label>
+
+            <input type="text" name="nome" value="{{ nome }}" placeholder="Digite o nome...">
+        </div>
+
+        <div>
+            <label>Código de Barras</label>
+
+            <input type="text" name="codigo_barras" value="{{ codigo_barras }}"
+                placeholder="Digite ou bipe o código...">
+        </div>
+
+        <div class="filter-actions">
+
+            <button class="btn-page">
+                Buscar
+            </button>
+
+            <a href="/produtos/" class="btn-page btn-limpar-produto">
+                Limpar
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div class="table-card" style="margin-top:20px;">
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+
+                <th>Produto</th>
+
+                <th>Código Barras</th>
+
+                <th>Preço</th>
+
+                <th>Ações</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for produto in produtos %}
+
+            <tr>
+
+                <td>
+                    {{ produto.nome }}
+                </td>
+
+                <td>
+                    {{ produto.codigo_barras }}
+                </td>
+
+                <td>
+                    R$ {{ produto.preco }}
+                </td>
+
+                <td>
+
+                    <a href="{% url 'editar_produto' produto.id %}" class="btn-page">
+                        Editar
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="4">
+                    Nenhum produto encontrado.
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

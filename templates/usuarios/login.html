@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <title>Login</title>
+</head>
+
+<body class="login-body">
+
+    <div class="login-box">
+
+        <div class="login-brand">
+            <h1>Grupo Natureza</h1>
+            <p>Sistema PDV</p>
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="btn">
+                Entrar
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

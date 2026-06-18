@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h2>Dashboard</h2>
+        <p>Visão geral das vendas, estoque e operação.</p>
+    </div>
+</div>
+
+<div class="filter-card">
+
+    <form method="GET" class="dashboard-filter">
+
+        <div>
+            <label>Período</label>
+            <select name="periodo">
+                <option value="hoje" {% if periodo == 'hoje' %}selected{% endif %}>
+                    Hoje
+                </option>
+
+                <option value="7" {% if periodo == '7' %}selected{% endif %}>
+                    Últimos 7 dias
+                </option>
+
+                <option value="30" {% if periodo == '30' %}selected{% endif %}>
+                    Últimos 30 dias
+                </option>
+
+<option value="personalizado" {% if periodo == 'personalizado' %}selected{% endif %}>
+    Personalizado
+</option>
+            </select>
+        </div>
+
+        {% if request.user.tipo == 'administrador' or request.user.tipo == 'operador' %}
+
+        <div>
+            <label>Franquia</label>
+
+            <select name="franquia">
+
+                <option value="">Todas</option>
+
+                {% for franquia in franquias %}
+
+<option
+    value="{{ franquia.id }}"
+    {% if franquia_id == franquia.id|stringformat:"s" %}selected{% endif %}
+>
+    {{ franquia.nome }}
+</option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        {% endif %}
+
+        <div>
+            <label>Data Inicial</label>
+            <input type="date" name="data_inicio" value="{{ data_inicio }}">
+        </div>
+
+        <div>
+            <label>Data Final</label>
+            <input type="date" name="data_fim" value="{{ data_fim }}">
+        </div>
+
+        <div class="dashboard-btn-area">
+            <button type="submit" class="btn-dashboard-aplicar">
+                Aplicar
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<div class="dashboard-cards">
+
+    <div class="dashboard-card">
+        <span>Vendas Hoje</span>
+        <strong>R$ {{ total_hoje|floatformat:2 }}</strong>
+    </div>
+
+    <div class="dashboard-card">
+        <span>Faturamento Período</span>
+        <strong>R$ {{ total_periodo|floatformat:2 }}</strong>
+    </div>
+
+    <div class="dashboard-card">
+        <span>Pedidos no Período</span>
+        <strong>{{ quantidade_vendas }}</strong>
+    </div>
+
+    <div class="dashboard-card">
+        <span>Ticket Médio</span>
+        <strong>R$ {{ ticket_medio|floatformat:2 }}</strong>
+    </div>
+
+    <div class="dashboard-card">
+        <span>Produtos Cadastrados</span>
+        <strong>{{ total_produtos }}</strong>
+    </div>
+
+    <div class="dashboard-card danger">
+        <span>Estoque Baixo</span>
+        <strong>{{ estoque_baixo }}</strong>
+    </div>
+
+    <div class="dashboard-card">
+        <span>Revendedores</span>
+        <strong>{{ total_revendedores }}</strong>
+    </div>
+
+    <div class="dashboard-card">
+        <span>Franquias Cadastradas</span>
+        <strong>{{ total_franquias }}</strong>
+    </div>
+
+</div>
+
+<div class="dashboard-grid">
+
+    <div class="table-card">
+        <h3>Últimas Vendas</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Revendedor</th>
+                    <th>Total</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for venda in ultimas_vendas %}
+                <tr>
+                    <td>{{ venda.codigo_pedido }}</td>
+                    <td>{{ venda.revendedor.nome }}</td>
+                    <td>R$ {{ venda.valor_total }}</td>
+                    <td>{{ venda.data|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Nenhuma venda encontrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-card">
+        <h3>Top Produtos Vendidos</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Qtd</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for produto in top_produtos %}
+                <tr>
+                    <td>{{ produto.produto__nome }}</td>
+                    <td>{{ produto.quantidade_total }}</td>
+                    <td>R$ {{ produto.total_vendido|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Nenhum produto vendido.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="dashboard-grid">
+
+    <div class="table-card">
+        <h3>Formas de Pagamento</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Pagamento</th>
+                    <th>Qtd</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for pagamento in formas_pagamento %}
+                <tr>
+                    <td>{{ pagamento.forma_pagamento }}</td>
+                    <td>{{ pagamento.quantidade }}</td>
+                    <td>R$ {{ pagamento.total|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Nenhum pagamento encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if request.user.tipo == 'administrador' or request.user.tipo == 'operador' %}
+    <div class="table-card">
+        <h3>Vendas por Franquia</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Franquia</th>
+                    <th>Qtd</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for franquia in vendas_por_franquia %}
+                <tr>
+                    <td>{{ franquia.franquia__nome }}</td>
+                    <td>{{ franquia.quantidade }}</td>
+                    <td>R$ {{ franquia.total|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Nenhuma venda por franquia.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

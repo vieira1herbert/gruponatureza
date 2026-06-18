@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h2>Editar Usuário</h2>
+        <p>Atualize os dados do usuário selecionado.</p>
+    </div>
+
+</div>
+
+<div class="form-card">
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+<div class="produto-acoes">
+
+    <button type="submit" class="btn-salvar-produto">
+        Salvar Alterações
+    </button>
+
+    <a href="{% url 'listar_usuarios' %}" class="btn-cancelar-produto">
+        Cancelar
+    </a>
+
+</div>
+
+    </form>
+
+</div>
+
+{% endblock %}

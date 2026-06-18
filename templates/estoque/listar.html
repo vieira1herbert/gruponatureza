@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h2>Consultar Estoque</h2>
+        <p>Consulta de estoque por código de barras.</p>
+    </div>
+</div>
+
+<div class="pdv-bipagem">
+    <form method="GET">
+        <label for="codigo">Consultar por código de barras</label>
+
+        <input
+            type="text"
+            id="codigo"
+            name="codigo"
+            class="input-bipagem"
+            placeholder="Digite ou bipe o código de barras e pressione ENTER"
+            value="{{ codigo }}"
+            autofocus
+        >
+    </form>
+</div>
+
+<div class="table-card" style="margin-top:20px;">
+
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Código</th>
+                <th>Franquia</th>
+                <th>Quantidade</th>
+                <th>Estoque Mínimo</th>
+                <th>Status</th>
+
+                {% if request.user.tipo == 'administrador' or request.user.tipo == 'operador' or request.user.tipo == 'gerente' %}
+                    <th>Ações</th>
+                {% endif %}
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for estoque in estoques %}
+
+            <tr>
+                <td>{{ estoque.produto.nome }}</td>
+                <td>{{ estoque.produto.codigo_barras }}</td>
+                <td>{{ estoque.franquia.nome }}</td>
+                <td>{{ estoque.quantidade }}</td>
+                <td>{{ estoque.estoque_minimo }}</td>
+
+                <td>
+                    {% if estoque.estoque_baixo %}
+                        <span class="badge badge-danger">Baixo</span>
+                    {% else %}
+                        <span class="badge badge-success">Normal</span>
+                    {% endif %}
+                </td>
+
+                {% if request.user.tipo == 'administrador' or request.user.tipo == 'operador' %}
+                    <td>
+                        <a href="{% url 'editar_estoque' estoque.id %}" class="btn-page">
+                            Editar
+                        </a>
+                    </td>
+                {% elif request.user.tipo == 'gerente' and estoque.franquia == request.user.franquia %}
+                    <td>
+                        <a href="{% url 'editar_estoque' estoque.id %}" class="btn-page">
+                            Editar
+                        </a>
+                    </td>
+                {% elif request.user.tipo == 'gerente' %}
+                    <td>-</td>
+                {% endif %}
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="7">Nenhum estoque encontrado.</td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

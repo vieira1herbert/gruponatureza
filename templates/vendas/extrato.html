@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="extrato-pedido">
+
+    <div class="extrato-topo">
+        <h2>Extrato de Pedido</h2>
+        <button onclick="window.print()" class="btn-page">Imprimir</button>
+    </div>
+
+    <h3 class="extrato-subtitulo">ITENS ENTREGUES DO PEDIDO</h3>
+
+    <table class="extrato-tabela">
+        <thead>
+            <tr>
+                <th>CÓD.</th>
+                <th>QTD.</th>
+                <th>PRODUTO</th>
+                <th>R$ UNITÁRIO</th>
+                <th>R$ A PAGAR</th>
+                <th>OPERAÇÃO</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in itens %}
+            <tr>
+                <td>{{ item.produto.codigo_barras }}</td>
+                <td>{{ item.quantidade }}</td>
+                <td>{{ item.produto.nome }}</td>
+                <td>R$ {{ item.preco_unitario }}</td>
+                <td>R$ {{ item.subtotal }}</td>
+                <td>Venda</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="extrato-resumo-grid">
+
+        <div>
+            <strong>PEDIDO Nº</strong>
+            <p>{{ venda.codigo_pedido }}</p>
+        </div>
+
+        <div>
+            <strong>DATA DO PEDIDO</strong>
+            <p>{{ venda.data|date:"d/m/Y" }}</p>
+        </div>
+
+        <div>
+            <strong>FORMA DE PAGAMENTO</strong>
+            <p>{{ venda.get_forma_pagamento_display }}</p>
+        </div>
+
+        <div>
+            <strong>TOTAL A PAGAR</strong>
+            <p>R$ {{ venda.valor_total }}</p>
+        </div>
+
+    </div>
+
+    <div class="extrato-dados">
+
+        <h3>Dados do Revendedor(a)</h3>
+
+        <div class="extrato-info-grid">
+            <p><strong>Revendedor(a):</strong> {{ venda.revendedor.nome }}</p>
+            <p><strong>Código Revendedor:</strong> {{ venda.revendedor.codigo }}</p>
+            <p><strong>CPF:</strong> {{ venda.revendedor.cpf }}</p>
+            <p><strong>Telefone:</strong> {{ venda.revendedor.telefone|default:"-" }}</p>
+            <p><strong>Email:</strong> {{ venda.revendedor.email|default:"-" }}</p>
+            <p><strong>Franquia:</strong> {{ venda.franquia.nome }}</p>
+        </div>
+
+    </div>
+
+    <div class="extrato-dados">
+
+        <h3>Dados do Vendedor(a)</h3>
+
+        <div class="extrato-info-grid">
+            <p><strong>Vendedor(a):</strong> {{ venda.usuario.first_name|default:venda.usuario.username }}</p>
+            <p><strong>Data do Extrato:</strong> {% now "d/m/Y H:i" %}</p>
+        </div>
+
+    </div>
+
+    <div class="extrato-total-final">
+        <span>VALOR TOTAL DO PEDIDO</span>
+        <strong>R$ {{ venda.valor_total }}</strong>
+    </div>
+
+    <div class="extrato-acoes">
+        <a href="{% url 'listar_vendas' %}" class="btn-cancelar">Voltar</a>
+    </div>
+
+</div>
+
+{% endblock %}

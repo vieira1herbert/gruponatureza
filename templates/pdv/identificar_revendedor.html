@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h2>Identificar Revendedor</h2>
+        <p>Informe o código ou CPF do revendedor para iniciar a venda.</p>
+    </div>
+</div>
+
+<div class="form-card">
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label for="identificacao">Código ou CPF do Revendedor</label>
+
+        <input type="text" id="identificacao" name="identificacao" class="input" placeholder="Digite o código ou CPF"
+            autofocus required>
+
+        <button type="submit" class="btn-finalizar">
+            Avançar para Bipagem
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
